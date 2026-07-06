@@ -1,8 +1,11 @@
 package com.github.bgrebennikov.recommendationservice.data;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class RecommendationResponse {
+    @JsonProperty("user_id")
     private String userId;
     private List<RecommendationItem> recommendations;
 
