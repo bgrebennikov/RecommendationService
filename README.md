@@ -6,7 +6,7 @@
 
 ## 🛠️ Технологический стек
 * **Java 17 / 21**
-* **Spring Boot 3.x** (Spring Web, Spring JDBC)
+* **Spring Boot 4.x** (Spring Web, Spring JDBC)
 * **H2 Database** (Встраиваемая, файловая БД в режиме Read-Only)
 * **SpringDoc OpenAPI (Swagger)** - для документирования REST API
 * **JUnit 5 & Mockito** - для тестирования
