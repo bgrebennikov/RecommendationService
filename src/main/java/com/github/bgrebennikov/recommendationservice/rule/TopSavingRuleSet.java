@@ -20,28 +20,23 @@ public class TopSavingRuleSet implements RecommendationRuleSet {
     }
 
     @Override
-    public Optional<RecommendationItem> evaluate(UUID userId) {
+    public Optional <RecommendationItem> evaluate(UUID userId) {
 
         boolean hasDebit = repository.hasProductType(userId, "DEBIT");
         if (!hasDebit) {
             return Optional.empty();
         }
 
-
         BigDecimal debitDeposits = repository.sumOfDepositsByType(userId, "DEBIT");
         BigDecimal savingDeposits = repository.sumOfDepositsByType(userId, "SAVING");
 
-
         BigDecimal debitWithdrawals = repository.sumOfWithdrawalsByType(userId, "DEBIT");
-
 
         BigDecimal limit = BigDecimal.valueOf(50_000);
         boolean condition2 = debitDeposits.compareTo(limit) >= 0 ||
                 savingDeposits.compareTo(limit) >= 0;
 
-
         boolean condition3 = debitDeposits.compareTo(debitWithdrawals) > 0;
-
 
         if (condition2 && condition3) {
             return Optional.of(new RecommendationItem(
@@ -52,4 +47,5 @@ public class TopSavingRuleSet implements RecommendationRuleSet {
         }
         return Optional.empty();
     }
+
 }
