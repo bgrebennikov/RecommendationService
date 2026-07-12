@@ -40,7 +40,7 @@ public class SimpleCreditRuleSet implements RecommendationRuleSet {
 
 
         BigDecimal debitDeposits = repository.sumOfDepositsByType(userId, "DEBIT");
-        BigDecimal debitWithdrawals = repository.sumOfWithdrawalsByType(userId, "WITHDRAW");
+        BigDecimal debitWithdrawals = repository.sumOfWithdrawalsByType(userId, "DEBIT");
 
 
         boolean isWithdrawalsOverLimit = debitWithdrawals != null &&
