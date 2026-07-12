@@ -1,5 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.repository;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ public class RecommendationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public RecommendationRepository(
-            JdbcTemplate jdbcTemplate) {
+            @Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
