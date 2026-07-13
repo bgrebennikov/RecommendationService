@@ -1,5 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.repository;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -52,4 +53,11 @@ public class RecommendationRepository {
         return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId, productType);
     }
 
+    public @Nullable Object getSumDepositsByProductType(UUID eq, String saving) {
+        return null;
+    }
+
+    public @Nullable Object getSumWithdrawsByProductType(UUID eq, String debit) {
+        return null;
+    }
 }
