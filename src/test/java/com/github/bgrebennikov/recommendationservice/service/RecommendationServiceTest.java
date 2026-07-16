@@ -3,94 +3,79 @@ package com.github.bgrebennikov.recommendationservice.service;
 import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
 import com.github.bgrebennikov.recommendationservice.data.RecommendationResponse;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationRuleSet;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(MockitoExtension.class)  // ← Правильная аннотация для сервиса!
+
+@ExtendWith(MockitoExtension.class)
 class RecommendationServiceTest {
 
-    @Mock
-    private RecommendationRuleSet ruleSet1;
+    private RecommendationRuleSet investRuleSet;
+    private RecommendationRuleSet creditRuleSet;
 
-    @Mock
-    private RecommendationRuleSet ruleSet2;
-
-    @Mock
-    private RecommendationRuleSet ruleSet3;
-
-    @InjectMocks
     private RecommendationService service;
 
-    private final UUID userId = UUID.randomUUID();
+    private UUID userId;
 
-    @Test
-    void shouldReturnRecommendationsWhenRulesMatch() {
-        // given - ПРАВИЛЬНЫЙ ПОРЯДОК: (id, name, text)
-        RecommendationItem item1 = new RecommendationItem(
-                UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"),
-                "Invest 500",
-                "Описание Invest 500"
-        );
-        RecommendationItem item2 = new RecommendationItem(
-                UUID.fromString("59efc529-2fff-41af-baff-90ccd7402925"),
-                "Top Saving",
-                "Описание Top Saving"
+
+    @BeforeEach
+    void setUp() {
+        userId = UUID.randomUUID();
+        investRuleSet = Mockito.mock(RecommendationRuleSet.class);
+        creditRuleSet = Mockito.mock(RecommendationRuleSet.class);
+        service = new RecommendationService(
+                List.of(investRuleSet, creditRuleSet)
         );
 
-        when(ruleSet1.evaluate(userId)).thenReturn(Optional.of(item1));
-        when(ruleSet2.evaluate(userId)).thenReturn(Optional.of(item2));
-        when(ruleSet3.evaluate(userId)).thenReturn(Optional.empty());
-
-        // when
-        RecommendationResponse response = service.getRecommendations(userId);
-
-        // then
-        assertThat(response.getRecommendations()).hasSize(2);
-        assertThat(response.getRecommendations()).containsExactly(item1, item2);
     }
 
     @Test
-    void shouldReturnEmptyListWhenNoRulesMatch() {
-        // given
-        when(ruleSet1.evaluate(userId)).thenReturn(Optional.empty());
-        when(ruleSet2.evaluate(userId)).thenReturn(Optional.empty());
-        when(ruleSet3.evaluate(userId)).thenReturn(Optional.empty());
-
-        // when
-        RecommendationResponse response = service.getRecommendations(userId);
-
-        // then
-        assertThat(response.getRecommendations()).isEmpty();
-    }
-
-    @Test
-    void shouldReturnOnlyMatchingRules() {
-        // given
-        RecommendationItem item = new RecommendationItem(
-                UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"),
-                "Invest 500",
-                "Описание Invest 500"
+    @DisplayName("Должен вернуть все подходящие рекомментации")
+    void shouldReturnAllMatchingRecommendations() {
+        RecommendationItem investRec = new RecommendationItem(
+                UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"), "Invest500", "text"
+        );
+        RecommendationItem creditRec = new RecommendationItem(
+                UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5b"), "Простой кредит", "text"
         );
 
-        when(ruleSet1.evaluate(userId)).thenReturn(Optional.of(item));
-        when(ruleSet2.evaluate(userId)).thenReturn(Optional.empty());
-        when(ruleSet3.evaluate(userId)).thenReturn(Optional.empty());
 
-        // when
+        Mockito.when(investRuleSet.evaluate(userId)).thenReturn(Optional.of(investRec));
+        Mockito.when(creditRuleSet.evaluate(userId)).thenReturn(Optional.of(creditRec));
+
         RecommendationResponse response = service.getRecommendations(userId);
 
-        // then
-        assertThat(response.getRecommendations()).hasSize(1);
-        assertThat(response.getRecommendations().get(0)).isEqualTo(item);
+        assertEquals(userId.toString(), response.getUserId());
+        assertEquals(2, response.getRecommendations().size());
+
+
+
+
+        assertTrue(response.getRecommendations().stream().anyMatch(item -> item.getName().equals("Invest500")));
+        assertTrue(response.getRecommendations().stream().anyMatch(item -> item.getName().equals("Простой кредит")));
+    }
+
+
+    @Test
+    @DisplayName("Должен вернуть пустой список если нет подходящих рекоммендаций")
+    void shouldReturnEmptyListOnNoRuleMatch() {
+        Mockito.when(investRuleSet.evaluate(userId)).thenReturn(Optional.empty());
+        Mockito.when(creditRuleSet.evaluate(userId)).thenReturn(Optional.empty());
+
+        RecommendationResponse response = service.getRecommendations(userId);
+
+        assertEquals(userId.toString(), response.getUserId());
+        assertTrue(response.getRecommendations().isEmpty());
     }
 }

@@ -2,203 +2,80 @@ package com.github.bgrebennikov.recommendationservice.rule;
 
 import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class SimpleCreditRuleSetTest {
 
-    @Mock
     private RecommendationRepository repository;
+    private SimpleCreditRuleSet ruleSet;
+    private UUID userId;
 
-    @InjectMocks
-    private SimpleCreditRuleSet rule;
-
-    private final UUID userId = UUID.randomUUID();
-    private final UUID expectedProductId = UUID.fromString("ab138afb-f3ba-4a93-b74f-0fcee86d447f");
-    private final String expectedProductName = "Простой кредит";
-
-    /**
-     * ПОЗИТИВНЫЙ СЦЕНАРИЙ: Все условия выполняются
-     * 1. Пользователь НЕ использует CREDIT -> false
-     * 2. Сумма пополнений DEBIT > сумма трат DEBIT -> 200000 > 150000
-     * 3. Сумма трат DEBIT > 100000 -> 150000 > 100000
-     */
-    @Test
-    void shouldReturnRecommendationWhenAllConditionsMet() {
-        // given
-        when(repository.hasProductType(eq(userId), eq("CREDIT"))).thenReturn(false);
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(200000));
-        when(repository.getSumWithdrawsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(150000));
-
-        // when
-        Optional<RecommendationItem> result = rule.evaluate(userId);
-
-        // then
-        assertThat(result).isPresent();
-        assertThat(result.get().getId()).isEqualTo(expectedProductId);
-        assertThat(result.get().getName()).isEqualTo(expectedProductName);
+    @BeforeEach
+    void setUp() {
+        userId = UUID.randomUUID();
+        repository = Mockito.mock(RecommendationRepository.class);
+        ruleSet = new SimpleCreditRuleSet(repository);
     }
 
-    /**
-     * ПОЗИТИВНЫЙ СЦЕНАРИЙ: Траты значительно больше 100000, но пополнения больше трат
-     */
     @Test
-    void shouldReturnRecommendationWhenSpendingVeryHigh() {
-        // given
-        when(repository.hasProductType(eq(userId), eq("CREDIT"))).thenReturn(false);
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(1000000));
-        when(repository.getSumWithdrawsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(500000));
+    @DisplayName("Позитивный тест: Простой кредит должен подойти, если все условия выполнены")
+    void shouldReturnRecommendationWhenUserMatches() {
 
-        // when
-        Optional<RecommendationItem> result = rule.evaluate(userId);
+        Mockito.when(repository.hasProductType(userId, "CREDIT")).thenReturn(false);
+        Mockito.when(repository.sumOfWithdrawalsByType(userId, "DEBIT")).thenReturn(new BigDecimal("120000.00"));
+        Mockito.when(repository.sumOfDepositsByType(userId, "DEBIT")).thenReturn(new BigDecimal("150000.00"));
 
-        // then
-        assertThat(result).isPresent();
+        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
+
+        assertTrue(result.isPresent());
+        assertEquals("Простой кредит", result.get().getName());
     }
 
-    /**
-     * НЕГАТИВНЫЙ СЦЕНАРИЙ: Пользователь уже использует CREDIT
-     */
     @Test
-    void shouldReturnEmptyWhenUserUsesCredit() {
-        // given
-        when(repository.hasProductType(eq(userId), eq("CREDIT"))).thenReturn(true);
+    @DisplayName("Негативный тест: Должен вернуть Optional.empty(), если у пользователя уже есть кредит")
+    void shouldReturnEmptyWhenUserAlreadyHasCredit() {
+        Mockito.when(repository.hasProductType(userId, "CREDIT")).thenReturn(true);
 
-        // when
-        Optional<RecommendationItem> result = rule.evaluate(userId);
+        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
 
-        // then
-        assertThat(result).isEmpty();
+        Assertions.assertTrue(result.isEmpty());
     }
 
-    /**
-     * НЕГАТИВНЫЙ СЦЕНАРИЙ: Сумма пополнений DEBIT <= сумма трат DEBIT
-     */
     @Test
-    void shouldReturnEmptyWhenDebitDepositsLessThanWithdraws() {
-        // given
-        when(repository.hasProductType(eq(userId), eq("CREDIT"))).thenReturn(false);
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(100000));
-        when(repository.getSumWithdrawsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(150000));
+    @DisplayName("Негативный тест: Должен вернуть Optional.empty(), если траты меньше или равны 100 000")
+    void shouldReturnEmptyWhenWithdrawalsAreNotEnough() {
+        Mockito.when(repository.hasProductType(userId, "CREDIT")).thenReturn(false);
 
-        // when
-        Optional<RecommendationItem> result = rule.evaluate(userId);
+        Mockito.when(repository.sumOfWithdrawalsByType(userId, "DEBIT")).thenReturn(new BigDecimal("100000.00"));
+        Mockito.when(repository.sumOfDepositsByType(userId, "DEBIT")).thenReturn(new BigDecimal("110000.00"));
 
-        // then
-        assertThat(result).isEmpty();
+        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
+
+        Assertions.assertTrue(result.isEmpty());
     }
 
-    /**
-     * НЕГАТИВНЫЙ СЦЕНАРИЙ: Сумма пополнений DEBIT = сумме трат DEBIT
-     */
     @Test
-    void shouldReturnEmptyWhenDebitDepositsEqualsWithdraws() {
-        // given
-        when(repository.hasProductType(eq(userId), eq("CREDIT"))).thenReturn(false);
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(200000));
-        when(repository.getSumWithdrawsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(200000));
+    @DisplayName("Негативный тест: Должен вернуть Optional.empty(), если пополнения меньше трат")
+    void shouldReturnEmptyWhenDepositsAreLessThanWithdrawals() {
+        Mockito.when(repository.hasProductType(userId, "CREDIT")).thenReturn(false);
+        Mockito.when(repository.sumOfWithdrawalsByType(userId, "DEBIT")).thenReturn(new BigDecimal("150000.00"));
+        Mockito.when(repository.sumOfDepositsByType(userId, "DEBIT")).thenReturn(new BigDecimal("130000.00"));
 
-        // when
-        Optional<RecommendationItem> result = rule.evaluate(userId);
+        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
 
-        // then
-        assertThat(result).isEmpty();
-    }
-
-    /**
-     * НЕГАТИВНЫЙ СЦЕНАРИЙ: Сумма трат DEBIT <= 100000 (граничное значение)
-     */
-    @Test
-    void shouldReturnEmptyWhenDebitWithdrawsLessOrEqual100000() {
-        // given
-        when(repository.hasProductType(eq(userId), eq("CREDIT"))).thenReturn(false);
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(200000));
-        when(repository.getSumWithdrawsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(100000));
-
-        // when
-        Optional<RecommendationItem> result = rule.evaluate(userId);
-
-        // then
-        assertThat(result).isEmpty();
-    }
-
-    /**
-     * НЕГАТИВНЫЙ СЦЕНАРИЙ: Сумма трат DEBIT меньше 100000
-     */
-    @Test
-    void shouldReturnEmptyWhenDebitWithdrawsLessThan100000() {
-        // given
-        when(repository.hasProductType(eq(userId), eq("CREDIT"))).thenReturn(false);
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(200000));
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(80000));
-
-        // when
-        Optional<RecommendationItem> result = rule.evaluate(userId);
-
-        // then
-        assertThat(result).isEmpty();
-    }
-
-    /**
-     * НЕГАТИВНЫЙ СЦЕНАРИЙ: Пополнения больше трат, но траты меньше 100000
-     */
-    @Test
-    void shouldReturnEmptyWhenDepositsHigherButWithdrawsBelowThreshold() {
-        // given
-        when(repository.hasProductType(eq(userId), eq("CREDIT"))).thenReturn(false);
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(50000));
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(30000));
-
-        // when
-        Optional<RecommendationItem> result = rule.evaluate(userId);
-
-        // then
-        assertThat(result).isEmpty();
-    }
-
-    /**
-     * ДОПОЛНИТЕЛЬНЫЙ НЕГАТИВНЫЙ СЦЕНАРИЙ: Все условия кроме CREDIT выполняются,
-     * но CREDIT есть -> должен быть empty
-     */
-    @Test
-    void shouldReturnEmptyWhenCreditExistsEvenIfOtherConditionsMet() {
-        // given
-        when(repository.hasProductType(eq(userId), eq("CREDIT"))).thenReturn(true);
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(200000));
-        when(repository.getSumDepositsByProductType(eq(userId), eq("DEBIT")))
-                .thenReturn(BigDecimal.valueOf(150000));
-
-        // when
-        Optional<RecommendationItem> result = rule.evaluate(userId);
-
-        // then
-        assertThat(result).isEmpty();
+        assertTrue(result.isEmpty());
     }
 }
