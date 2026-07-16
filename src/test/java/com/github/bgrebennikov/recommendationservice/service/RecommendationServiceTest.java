@@ -26,7 +26,6 @@ class RecommendationServiceTest {
 
     private RecommendationService service;
 
-    private RecommendationService recommendationService;
     private UUID userId;
 
 
