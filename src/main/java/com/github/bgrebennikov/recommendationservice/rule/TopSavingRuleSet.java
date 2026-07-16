@@ -1,6 +1,7 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 
 import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import org.springframework.stereotype.Component;
 
@@ -42,15 +43,15 @@ public class TopSavingRuleSet implements RecommendationRuleSet {
     @Override
     public Optional <RecommendationItem> evaluate(UUID userId) {
 
-        boolean hasDebit = repository.hasProductType(userId, "DEBIT");
+        boolean hasDebit = repository.hasProductType(userId, ProductType.DEBIT);
         if (!hasDebit) {
             return Optional.empty();
         }
 
-        BigDecimal debitDeposits = repository.sumOfDepositsByType(userId, "DEBIT");
-        BigDecimal savingDeposits = repository.sumOfDepositsByType(userId, "SAVING");
+        BigDecimal debitDeposits = repository.sumOfDepositsByType(userId, ProductType.DEBIT);
+        BigDecimal savingDeposits = repository.sumOfDepositsByType(userId, ProductType.SAVING);
 
-        BigDecimal debitWithdrawals = repository.sumOfWithdrawalsByType(userId, "DEBIT");
+        BigDecimal debitWithdrawals = repository.sumOfWithdrawalsByType(userId, ProductType.DEBIT);
 
         BigDecimal limit = BigDecimal.valueOf(50_000);
         boolean isDepositsGreaterLimi = debitDeposits.compareTo(limit) >= 0 ||
