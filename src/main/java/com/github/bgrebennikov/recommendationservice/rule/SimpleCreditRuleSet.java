@@ -1,5 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import org.springframework.stereotype.Component;
 
@@ -33,14 +34,14 @@ public class SimpleCreditRuleSet implements RecommendationRuleSet {
     public Optional<RecommendationItem> evaluate(UUID userId) {
 
 
-        boolean hasCredit = repository.hasProductType(userId, "CREDIT");
+        boolean hasCredit = repository.hasProductType(userId, ProductType.CREDIT);
         if (hasCredit) {
             return Optional.empty();
         }
 
 
-        BigDecimal debitDeposits = repository.sumOfDepositsByType(userId, "DEBIT");
-        BigDecimal debitWithdrawals = repository.sumOfWithdrawalsByType(userId, "DEBIT");
+        BigDecimal debitDeposits = repository.sumOfDepositsByType(userId, ProductType.DEBIT);
+        BigDecimal debitWithdrawals = repository.sumOfWithdrawalsByType(userId, ProductType.DEBIT);
 
 
         boolean isWithdrawalsOverLimit = debitWithdrawals != null &&

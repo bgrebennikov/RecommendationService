@@ -1,6 +1,7 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 
 import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import org.springframework.stereotype.Component;
 
@@ -30,19 +31,19 @@ public class Invest500RuleSet implements RecommendationRuleSet {
     public Optional<RecommendationItem> evaluate(UUID userId) {
 
 
-        boolean hasDebit = repository.hasProductType(userId, "DEBIT");
+        boolean hasDebit = repository.hasProductType(userId, ProductType.DEBIT);
         if (!hasDebit) {
             return Optional.empty();
         }
 
 
-        boolean hasInvest = repository.hasProductType(userId, "INVEST");
+        boolean hasInvest = repository.hasProductType(userId, ProductType.INVEST);
         if (hasInvest) {
             return Optional.empty();
         }
 
 
-        BigDecimal savingDeposits = repository.sumOfDepositsByType(userId, "SAVING");
+        BigDecimal savingDeposits = repository.sumOfDepositsByType(userId, ProductType.SAVING);
 
 
         boolean isSavingEnough = savingDeposits != null && savingDeposits.compareTo(BigDecimal.valueOf(1000)) > 0;

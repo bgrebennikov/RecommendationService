@@ -1,6 +1,7 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 
 import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,9 +34,9 @@ class Invest500RuleSetTest {
     @Test
     @DisplayName("Позитивный тест: Invest500 должен подойти, если все условия выполнены")
     void shouldReturnRecommendationWhenUserMatches() {
-        Mockito.when(repository.hasProductType(userId, "DEBIT")).thenReturn(true);
-        Mockito.when(repository.hasProductType(userId, "INVEST")).thenReturn(false);
-        Mockito.when(repository.sumOfDepositsByType(userId, "SAVING"))
+        Mockito.when(repository.hasProductType(userId, ProductType.DEBIT)).thenReturn(true);
+        Mockito.when(repository.hasProductType(userId, ProductType.INVEST)).thenReturn(false);
+        Mockito.when(repository.sumOfDepositsByType(userId, ProductType.SAVING))
                 .thenReturn(new BigDecimal("5000.00"));
 
         Optional<RecommendationItem> result = ruleSet.evaluate(userId);
@@ -47,7 +48,7 @@ class Invest500RuleSetTest {
     @Test
     @DisplayName("Негативный тест: Invest500 должен вернуть Optional.empty(), если нет дебетовой карты")
     void shouldReturnEmptyWhenUserHasNoDebitCard() {
-        Mockito.when(repository.hasProductType(userId, "DEBIT")).thenReturn(false);
+        Mockito.when(repository.hasProductType(userId, ProductType.DEBIT)).thenReturn(false);
 
         Optional<RecommendationItem> result = ruleSet.evaluate(userId);
         assertTrue(result.isEmpty());
