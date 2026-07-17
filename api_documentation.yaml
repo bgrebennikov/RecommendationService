@@ -1,0 +1,87 @@
+openapi: "3.1.0"
+
+servers:
+  - url: http://localhost:8080
+info:
+  title: Recommendation Service API
+  version: 1.0.0
+
+
+paths:
+  /recommendation/{user_id}:
+    get:
+      summary: Получить рекомендации для пользователя
+      description: Возвращает список рекомендаций для пользователя на основе его расходов и имеющихся банковских продуктов.
+      operationId: getRecommendations
+
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Идентификатор пользователя.
+          schema:
+            type: string
+            format: uuid
+
+      responses:
+        "200":
+          description: Рекомендации успешно получены.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecommendationResponse"
+
+        "400":
+          description: Передан некорректный идентификатор пользователя.
+
+        "404":
+          description: Пользователь не найден.
+
+        "500":
+          description: Внутренняя ошибка сервера.
+
+components:
+  schemas:
+    RecommendationResponse:
+      type: object
+      description: Ответ, содержащий рекомендации для пользователя.
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор пользователя.
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+        recommendations:
+          type: array
+          description: Список рекомендаций для пользователя.
+          items:
+            $ref: "#/components/schemas/RecommendationItem"
+
+      required:
+        - user_id
+        - recommendations
+
+    RecommendationItem:
+      type: object
+      description: Информация об одной рекомендации.
+      properties:
+        name:
+          type: string
+          description: Название рекомендуемого продукта.
+          example: "Инвестиции 500"
+
+        id:
+          type: string
+          description: Уникальный идентификатор рекомендации.
+          example: "INVEST_500"
+
+        text:
+          type: string
+          description: Текст рекомендации.
+          example: "Откройте инвестиционный счет и начните инвестировать."
+
+      required:
+        - name
+        - id
+        - text
