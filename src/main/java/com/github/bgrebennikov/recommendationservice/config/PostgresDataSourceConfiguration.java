@@ -2,6 +2,7 @@ package com.github.bgrebennikov.recommendationservice.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,11 +34,19 @@ public class PostgresDataSourceConfiguration {
     @Bean(name = "postgresJdbcTemplate")
     JdbcTemplate jdbcTemplate(
             @Qualifier("postgresDataSource") DataSource dataSource
-    ){
+    ) {
         return new JdbcTemplate(dataSource);
     }
 
-
+    @Bean
+    SpringLiquibase springLiquibase(
+            @Qualifier("postgresDataSource") DataSource dataSource
+    ) {
+        SpringLiquibase lb = new SpringLiquibase();
+        lb.setDataSource(dataSource);
+        lb.setChangeLog("classpath:db/changelog/db.changelog-master.yaml");
+        return lb;
+    }
 
 
 }
