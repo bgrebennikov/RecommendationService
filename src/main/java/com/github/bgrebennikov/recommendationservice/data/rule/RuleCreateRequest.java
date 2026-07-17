@@ -18,6 +18,15 @@ public class RuleCreateRequest {
     @JsonProperty("rule")
     private List<DRule> rule;
 
+    public RuleCreateRequest(String productName, UUID productId, String productText, List<DRule> rule) {
+        this.productName = productName;
+        this.productId = productId;
+        this.productText = productText;
+        this.rule = rule;
+    }
+
+    RuleCreateRequest() {}
+
     public UUID getProductId() {
         return productId;
     }
