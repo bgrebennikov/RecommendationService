@@ -9,8 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
+/**
+ * @author Ekaterina, Boris
+ * @version 1.0
+ * Класс представляет CRUD методы для управления динамическими правилами в БД.
+ *
+ */
 
 @Service
 public class RuleService {
@@ -22,29 +27,29 @@ public class RuleService {
     }
 
     @Transactional
-    public void createRule(RuleCreateRequest request) {
+    public RuleEntity createRule(RuleCreateRequest request) {
         RuleEntity entity = new RuleEntity();
         entity.setProductId(request.getProductId());
         entity.setProductName(request.getProductName());
         entity.setProductText(request.getProductText());
 
-        List<RuleQuery> queries = IntStream.range(0, request.getRule().size())
-                .mapToObj(i -> {
-                    var dRule = request.getRule().get(i);
-                    RuleQuery query = new RuleQuery();
-                    query.setQueryType(dRule.getQuery());
-                    query.setArguments(dRule.getArguments());
-                    query.setNegate(dRule.getNegate() != null && dRule.getNegate());
-                    query.setSortOrder(i);
-                    query.setRule(entity);
-                    return query;
-                })
-                .collect(Collectors.toList());
+        var rulesList = request.getRule();
+        for (int i = 0; i < rulesList.size(); i++) {
+            var dRule = rulesList.get(i);
+            RuleQuery query = new RuleQuery();
+            query.setQueryType(dRule.getQuery());
+            query.setArguments(dRule.getArguments());
+            query.setNegate(Boolean.TRUE.equals(dRule.getNegate()));
+            query.setSortOrder(i);
 
-        entity.setQueries(queries);
-        ruleRepository.save(entity);
+
+            entity.addQuery(query);
+        }
+
+        return ruleRepository.save(entity);
     }
 
+    @Transactional(readOnly = true)
     public List<RuleEntity> findAll() {
         return ruleRepository.findAll();
     }
