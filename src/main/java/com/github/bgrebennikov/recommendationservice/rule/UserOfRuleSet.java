@@ -10,6 +10,17 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * логика динамического правила для проверки использования пользователем конкретного банковского продукта.
+ * <p>
+ * Обрабатывает запросы типа {@link DRuleQuery#USER_OF}.
+ * Ожидает в качестве первого аргумента ({@code query.getArguments().get(0)}) строковое представление
+ * типа продукта {@link ProductType}.
+ * Учитывает инверсию условия через флаг {@link RuleQuery#getNegate()}.
+ *
+ * @author Boris
+ * @version 1.0
+ */
 @Component
 public class UserOfRuleSet implements RecommendationDynamicRuleSet {
 
