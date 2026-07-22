@@ -21,8 +21,8 @@ public class RuleController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createRule(@RequestBody RuleCreateRequest request) {
-        ruleService.createRule(request);
+    public RuleEntity createRule(@RequestBody RuleCreateRequest request) {
+        return ruleService.createRule(request);
     }
 
     @GetMapping
