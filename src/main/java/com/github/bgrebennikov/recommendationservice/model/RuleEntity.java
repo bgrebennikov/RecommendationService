@@ -1,5 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -23,7 +24,8 @@ public class RuleEntity {
     @Column(name = "product_text", columnDefinition = "TEXT")
     private String productText;
 
-    @OneToMany(mappedBy = "rule", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "rule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("sortOrder ASC")
     private List<RuleQuery> queries;
 

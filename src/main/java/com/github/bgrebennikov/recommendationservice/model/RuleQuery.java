@@ -1,5 +1,7 @@
 package com.github.bgrebennikov.recommendationservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.bgrebennikov.recommendationservice.data.rule.DRuleQuery;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -28,9 +30,11 @@ public class RuleQuery {
     private Boolean negate;
 
     @Column(name = "sort_order", nullable = false)
+    @JsonIgnore
     private Integer sortOrder;
 
-    @ManyToOne
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rule_id", nullable = false)
     private RuleEntity rule;
 
