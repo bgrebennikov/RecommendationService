@@ -4,3 +4,6 @@ databaseChangeLog:
       author: boris
       changes:
         - empty: {}
+
+  - includeAll:
+      path: db/changelog/migrations/
