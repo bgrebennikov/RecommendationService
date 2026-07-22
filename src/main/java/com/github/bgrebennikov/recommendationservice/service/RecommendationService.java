@@ -28,4 +28,5 @@ public class RecommendationService {
 
         return new RecommendationResponse(userId.toString(), recommendations);
     }
+
 }
