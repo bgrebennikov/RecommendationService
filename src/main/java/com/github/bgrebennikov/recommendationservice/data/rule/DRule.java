@@ -15,7 +15,7 @@ public class DRule {
     @JsonProperty("negate")
     private Boolean negate;
 
-    DRule(DRuleQuery query, List<String> arguments, Boolean negate) {
+    public DRule(DRuleQuery query, List<String> arguments, Boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;

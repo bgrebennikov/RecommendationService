@@ -2,6 +2,8 @@ package com.github.bgrebennikov.recommendationservice.model;
 
 import com.github.bgrebennikov.recommendationservice.data.rule.DRuleQuery;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +20,7 @@ public class RuleQuery {
     @Column(name = "query_type", nullable = false)
     private DRuleQuery queryType;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "arguments", columnDefinition = "JSONB")
     private List<String> arguments;
 
