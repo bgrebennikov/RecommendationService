@@ -20,6 +20,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис формирования персональных рекомендаций для пользователей.
+ * <p>
+ * Объединяет результат выполнения двух движков:
+ * <ul>
+ *   <li><b>Статический</b> — проверяет набор жестко запрограммированных правил ({@link RecommendationRuleSet})</li>
+ *   <li><b>Динамический</b> — загружает правила из БД ({@link RuleRepository}) и вычисляет их
+ *       через зарегистрированные процессоры стратегий ({@link RecommendationDynamicRuleSet})</li>
+ * </ul>
+ *
+ * @author Konstantin, Boris
+ * @version 1.0
+ */
 @Service
 public class RecommendationService {
 
@@ -42,6 +55,12 @@ public class RecommendationService {
                 ));
     }
 
+    /**
+     * Формирует полный список доступных рекомендаций для указанного пользователя.
+     *
+     * @param userId Уникальный идентификатор пользователя
+     * @return Общий результат с агрегированным списком персональных рекомендаций
+     */
     public RecommendationResponse getRecommendations(UUID userId) {
         List<RecommendationItem> recommendations = new ArrayList<>();
 

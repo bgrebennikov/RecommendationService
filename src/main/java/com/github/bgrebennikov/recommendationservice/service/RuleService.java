@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.UUID;
 
 /**
+ * Сервис для управления динамическими правилами рекомендаций в БД.
+ * <p>
+ * Предоставляет методы создания, получения и удаления правил с поддержкой транзакционности.
+ *
  * @author Ekaterina, Boris
  * @version 1.0
- * Класс представляет CRUD методы для управления динамическими правилами в БД.
- *
  */
-
 @Service
 public class RuleService {
 
@@ -26,6 +27,14 @@ public class RuleService {
         this.ruleRepository = ruleRepository;
     }
 
+    /**
+     * Создает новое правило на основе запроса и сохраняет его вместе с дочерними условиями в БД.
+     * <p>
+     * Метод связывает условия ({@link RuleQuery}) с правилом с сохранением их порядка (sortOrder).
+     *
+     * @param request DTO с данными для создания правила и списком условий
+     * @return Сохраненную сущность {@link RuleEntity} с присвоенным ID и связанными условиями
+     */
     @Transactional
     public RuleEntity createRule(RuleCreateRequest request) {
         RuleEntity entity = new RuleEntity();
@@ -49,11 +58,21 @@ public class RuleService {
         return ruleRepository.save(entity);
     }
 
+    /**
+     * Возвращает список всех существующих правил в системе.
+     *
+     * @return Список сущностей {@link RuleEntity}
+     */
     @Transactional(readOnly = true)
     public List<RuleEntity> findAll() {
         return ruleRepository.findAll();
     }
 
+    /**
+     * Удаляет правило из базы данных по его уникальному идентификатору.
+     *
+     * @param id Уникальный идентификатор правила (UUID)
+     */
     @Transactional
     public void deleteRule(UUID id) {
         ruleRepository.deleteById(id);

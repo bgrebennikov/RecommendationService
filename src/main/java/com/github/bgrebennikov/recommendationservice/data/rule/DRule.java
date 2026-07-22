@@ -4,8 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-
+/**
+ * DTO отдельного динамического условия для расчета рекомендаций.
+ *
+ * @author Boris
+ * @version 1.0
+ */
 public class DRule {
+
     @JsonProperty("query")
     private DRuleQuery query;
 
@@ -15,6 +21,11 @@ public class DRule {
     @JsonProperty("negate")
     private Boolean negate;
 
+    /**
+     * @param query     Тип бизнес-проверки
+     * @param arguments Параметры проверки (например: тип продукта, минимальная сумма, валюта)
+     * @param negate    Флаг инверсии (true — правило сработает, если проверка НЕ выполнена)
+     */
     public DRule(DRuleQuery query, List<String> arguments, Boolean negate) {
         this.query = query;
         this.arguments = arguments;
@@ -24,6 +35,12 @@ public class DRule {
     DRule() {
     }
 
+    /**
+     * Позиционные параметры для выполнения {@link #getQuery()}.
+     * <p>
+     * Содержимое зависит от типа запроса. Например, для сравнения сумм транзакций
+     * ожидаются значения: {@code [продукт, оператор (>, <), сумма]}.
+     */
     public List<String> getArguments() {
         return arguments;
     }
@@ -32,9 +49,13 @@ public class DRule {
         return query;
     }
 
+    /**
+     * Определяет, нужно ли инвертировать результат проверки (NOT).
+     *
+     * @return {@code true} если условие должно работать как отрицание; {@code false} или {@code null},
+     * если выполняется прямое условие.
+     */
     public Boolean getNegate() {
         return negate;
     }
-
-
 }
