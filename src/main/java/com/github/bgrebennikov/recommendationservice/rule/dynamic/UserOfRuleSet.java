@@ -1,9 +1,10 @@
-package com.github.bgrebennikov.recommendationservice.rule;
+package com.github.bgrebennikov.recommendationservice.rule.dynamic;
 
 import com.github.bgrebennikov.recommendationservice.data.rule.DRuleQuery;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
+import com.github.bgrebennikov.recommendationservice.rule.RecommendationDynamicRuleSet;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
