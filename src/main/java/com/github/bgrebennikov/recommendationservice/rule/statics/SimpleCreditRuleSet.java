@@ -1,7 +1,8 @@
-package com.github.bgrebennikov.recommendationservice.rule;
+package com.github.bgrebennikov.recommendationservice.rule.statics;
 import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
+import com.github.bgrebennikov.recommendationservice.rule.RecommendationRuleSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
