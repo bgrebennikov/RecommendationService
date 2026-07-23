@@ -3,12 +3,23 @@ package com.github.bgrebennikov.recommendationservice.data;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * DTO, описывающий отдельное рекомендуемое банковское предложение для пользователя.
+ *
+ * @author Ekaterina, Boris
+ * @version 1.0
+ */
 public class RecommendationItem {
+
     private UUID id;
     private String name;
     private String text;
 
-
+    /**
+     * @param id   Уникальный идентификатор рекомендуемого продукта
+     * @param name Наименование продукта
+     * @param text Рекламное описание или текст рекомендации
+     */
     public RecommendationItem(UUID id, String name, String text) {
         this.id = id;
         this.name = name;
@@ -17,7 +28,6 @@ public class RecommendationItem {
 
     public RecommendationItem() {
     }
-
 
     public UUID getId() {
         return id;
@@ -55,4 +65,3 @@ public class RecommendationItem {
         return Objects.hash(id, name, text);
     }
 }
-

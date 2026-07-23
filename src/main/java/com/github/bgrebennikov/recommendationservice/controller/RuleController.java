@@ -9,6 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * REST-контроллер для управления правилами рекомендаций.
+ * <p>
+ * Предоставляет HTTP-эндпоинты для создания, получения и удаления динамических правил.
+ *
+ * @author Ekaterina, Boris
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/rule")
 public class RuleController {
@@ -19,17 +27,33 @@ public class RuleController {
         this.ruleService = ruleService;
     }
 
+    /**
+     * Создает новое правило рекомендаций.
+     *
+     * @param request DTO с параметрами создаваемого правила и его условиями
+     * @return Созданная сущность {@link RuleEntity} со статусом 201 Created
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createRule(@RequestBody RuleCreateRequest request) {
-        ruleService.createRule(request);
+    public RuleEntity createRule(@RequestBody RuleCreateRequest request) {
+        return ruleService.createRule(request);
     }
 
+    /**
+     * Возвращает полный список всех зарегистрированных правил.
+     *
+     * @return Список сущностей {@link RuleEntity} со статусом 200 OK
+     */
     @GetMapping
     public List<RuleEntity> getAllRules() {
         return ruleService.findAll();
     }
 
+    /**
+     * Удаляет правило по его уникальному идентификатору.
+     *
+     * @param id Уникальный идентификатор правила (UUID)
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRule(@PathVariable UUID id) {
