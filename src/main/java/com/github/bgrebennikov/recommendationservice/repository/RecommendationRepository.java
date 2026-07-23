@@ -16,6 +16,17 @@ public class RecommendationRepository {
             @Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+    public long countTransactionsByType(UUID userId, ProductType productType) {
+        String sql = """
+                SELECT COUNT(*)
+                FROM TRANSACTIONS t
+                JOIN PRODUCTS p ON t.PRODUCT_ID = p.id
+                WHERE t.USER_ID = ? AND p.TYPE = ?
+                """;
+        // Используем Long.class, так как COUNT возвращает число
+        Long count = jdbcTemplate.queryForObject(sql, Long.class, userId, productType.toString());
+        return count != null ? count : 0;
+    }
 
     public boolean hasProductType(UUID userId, ProductType productType) {
         String sql = """
@@ -52,5 +63,6 @@ public class RecommendationRepository {
                 """;
         return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId, productType.toString());
     }
+
 
 }
