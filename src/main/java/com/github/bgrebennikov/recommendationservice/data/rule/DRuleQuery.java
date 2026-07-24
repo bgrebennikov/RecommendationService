@@ -1,4 +1,4 @@
-package com.github.bgrebennikov.recommendationservice.data.dto.rule;
+package com.github.bgrebennikov.recommendationservice.data.rule;
 
 /**
  * Перечисление поддерживаемых типов условий (запросов) для динамических правил.

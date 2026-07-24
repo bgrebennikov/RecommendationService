@@ -1,4 +1,4 @@
-package com.github.bgrebennikov.recommendationservice.data.dto.recommendation;
+package com.github.bgrebennikov.recommendationservice.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

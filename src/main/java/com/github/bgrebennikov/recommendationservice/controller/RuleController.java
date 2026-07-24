@@ -1,12 +1,12 @@
 package com.github.bgrebennikov.recommendationservice.controller;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleCreateRequest;
-import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleResponseDto;
+import com.github.bgrebennikov.recommendationservice.data.rule.RuleCreateRequest;
 import com.github.bgrebennikov.recommendationservice.model.RuleEntity;
 import com.github.bgrebennikov.recommendationservice.service.RuleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -45,7 +45,7 @@ public class RuleController {
      * @return Список сущностей {@link RuleEntity} со статусом 200 OK
      */
     @GetMapping
-    public RuleResponseDto getAllRules() {
+    public List<RuleEntity> getAllRules() {
         return ruleService.findAll();
     }
 

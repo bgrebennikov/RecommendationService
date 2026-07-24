@@ -1,8 +1,8 @@
 package com.github.bgrebennikov.recommendationservice.service;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationResponse;
-import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.RecommendationResponse;
+import com.github.bgrebennikov.recommendationservice.data.rule.DRuleQuery;
 import com.github.bgrebennikov.recommendationservice.model.RuleEntity;
 import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
 import com.github.bgrebennikov.recommendationservice.repository.RuleRepository;
