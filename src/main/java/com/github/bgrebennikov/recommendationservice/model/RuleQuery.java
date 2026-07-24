@@ -2,7 +2,7 @@ package com.github.bgrebennikov.recommendationservice.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.bgrebennikov.recommendationservice.data.rule.DRuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
