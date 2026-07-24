@@ -29,6 +29,30 @@ public class RecommendationRepository {
     }
 
     /**
+     * Считает количество транзакций по определенному типу продукта.
+     * <p>
+     * Результат кешируется в Redis с ключом {@code user-products-count::<userId>:<productType>}.
+     *
+     * @param userId      Идентификатор пользователя
+     * @param productType Тип банковского продукта
+     * @return {@code long}
+     */
+    @Cacheable(
+            value = "user-products-count",
+            key = "#userId.toString() + ':' + #productType.name()"
+    )
+    public long countTransactionsByType(UUID userId, ProductType productType) {
+        String sql = """
+                SELECT COUNT(*)
+                FROM TRANSACTIONS t
+                JOIN PRODUCTS p ON t.PRODUCT_ID = p.id
+                WHERE t.USER_ID = ? AND p.TYPE = ?
+                """;
+        Long count = jdbcTemplate.queryForObject(sql, Long.class, userId, productType.name());
+        return count != null ? count : 0;
+    }
+
+    /**
      * Проверяет, пользуется ли пользователь указанным типом банковского продукта.
      * <p>
      * Результат кешируется в Redis с ключом {@code user-products::<userId>:<productType>}.

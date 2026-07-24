@@ -3,6 +3,7 @@ package com.github.bgrebennikov.recommendationservice.rule;
 import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
+import com.github.bgrebennikov.recommendationservice.rule.statics.TopSavingRuleSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
