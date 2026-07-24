@@ -1,7 +1,7 @@
 package com.github.bgrebennikov.recommendationservice.rule.dynamic;
 
 
-import com.github.bgrebennikov.recommendationservice.data.rule.DRuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
 import com.github.bgrebennikov.recommendationservice.data.types.ComparisonOperator;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
