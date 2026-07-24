@@ -118,5 +118,16 @@ public class RuleEntity {
             query.setRule(null);
         }
     }
+
+    @Override
+    public String toString() {
+        return "RuleEntity{" +
+                "id=" + id +
+                ", productName='" + productName + '\'' +
+                ", productId=" + productId +
+                ", productText='" + productText + '\'' +
+                ", queries=" + queries +
+                '}';
+    }
 }
 
