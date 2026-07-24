@@ -1,6 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 
-import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import org.junit.jupiter.api.Assertions;

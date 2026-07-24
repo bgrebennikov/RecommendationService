@@ -1,7 +1,8 @@
 package com.github.bgrebennikov.recommendationservice.service;
 
-import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
-import com.github.bgrebennikov.recommendationservice.data.RecommendationResponse;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationResponse;
+import com.github.bgrebennikov.recommendationservice.repository.RuleRepository;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationRuleSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,8 +35,12 @@ class RecommendationServiceTest {
         userId = UUID.randomUUID();
         investRuleSet = Mockito.mock(RecommendationRuleSet.class);
         creditRuleSet = Mockito.mock(RecommendationRuleSet.class);
+        RuleRepository ruleRepository = Mockito.mock(RuleRepository.class);
         service = new RecommendationService(
-                List.of(investRuleSet, creditRuleSet)
+                List.of(investRuleSet, creditRuleSet),
+                ruleRepository,
+                List.of()
+
         );
 
     }
