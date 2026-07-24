@@ -1,6 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.controller;
 
-import com.github.bgrebennikov.recommendationservice.data.RecommendationResponse;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationResponse;
 import com.github.bgrebennikov.recommendationservice.service.RecommendationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
