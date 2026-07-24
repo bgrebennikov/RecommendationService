@@ -1,7 +1,7 @@
 package com.github.bgrebennikov.recommendationservice.controller;
 
-import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
-import com.github.bgrebennikov.recommendationservice.data.RecommendationResponse;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationResponse;
 import com.github.bgrebennikov.recommendationservice.service.RecommendationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

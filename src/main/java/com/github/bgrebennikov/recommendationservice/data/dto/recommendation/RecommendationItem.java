@@ -1,4 +1,4 @@
-package com.github.bgrebennikov.recommendationservice.data;
+package com.github.bgrebennikov.recommendationservice.data.dto.recommendation;
 
 import java.util.Objects;
 import java.util.UUID;
