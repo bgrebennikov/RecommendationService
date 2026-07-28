@@ -77,12 +77,9 @@ public class RuleService {
      */
     @Transactional(readOnly = true)
     @Cacheable(value = RULES_CACHE_KEY)
-    public RuleResponseDto findAll() {
-
-        return new RuleResponseDto(
-                ruleRepository.findAll().stream()
-                        .map(this::toDto)
-                        .toList()
+    public RuleResponseListDto findAll() {
+        return ruleMapper.toListResponseDto(
+                ruleRepository.findAllWithQueries()
         );
     }
 
