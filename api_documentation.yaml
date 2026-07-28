@@ -2,10 +2,10 @@ openapi: "3.1.0"
 
 servers:
   - url: http://localhost:8080
+
 info:
   title: Recommendation Service API
   version: 1.0.0
-
 
 paths:
   /recommendation/{user_id}:
@@ -37,6 +37,66 @@ paths:
         "404":
           description: Пользователь не найден.
 
+        "500":
+          description: Внутренняя ошибка сервера.
+
+  /rule:
+    post:
+      summary: Создать новое динамическое правило
+      description: Создает новое правило рекомендаций вместе с его условиями.
+      operationId: createRule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RuleCreateRequest"
+      responses:
+        "200":
+          description: Правило успешно создано.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuleItemDto"
+        "400":
+          description: Некорректные данные правила.
+        "500":
+          description: Внутренняя ошибка сервера.
+
+    get:
+      summary: Получить список всех правил
+      description: Возвращает полный список всех зарегистрированных динамических правил.
+      operationId: getAllRules
+      responses:
+        "200":
+          description: Список правил успешно получен.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RuleResponseListDto"
+        "500":
+          description: Внутренняя ошибка сервера.
+
+  /rule/{id}:
+    delete:
+      summary: Удалить правило по ID
+      description: Удаляет правило по его уникальному идентификатору.
+      operationId: deleteRule
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Уникальный идентификатор правила.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Правило успешно удалено.
+        "400":
+          description: Некорректный ID правила.
+        "404":
+          description: Правило с указанным ID не найдено.
         "500":
           description: Внутренняя ошибка сервера.
 
@@ -85,3 +145,100 @@ components:
         - name
         - id
         - text
+
+    RuleCreateRequest:
+      type: object
+      description: Запрос на создание динамического правила.
+      properties:
+        product_name:
+          type: string
+          description: Название продукта.
+          example: "Простая накопительная карта"
+        product_id:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор продукта.
+          example: "a816171f-0e4f-4d92-948f-3669be346065"
+        product_text:
+          type: string
+          description: Текст рекомендации.
+          example: "Накапливайте средства с выгодным процентом."
+        queries:
+          type: array
+          description: Список условий правила.
+          items:
+            $ref: "#/components/schemas/RuleQueryDto"
+      required:
+        - product_name
+        - product_id
+        - product_text
+        - queries
+
+    RuleQueryDto:
+      type: object
+      description: Условие правила.
+      properties:
+        query:
+          type: string
+          description: Тип запроса/условия.
+          example: "USER_REVENUE"
+        arguments:
+          type: array
+          description: Аргументы условия.
+          items:
+            type: string
+          example: ["DEPOSIT", "1000"]
+        negate:
+          type: boolean
+          description: Флаг инвертирования условия.
+          example: false
+      required:
+        - query
+        - arguments
+        - negate
+
+    RuleItemDto:
+      type: object
+      description: Информационная карточка правила.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор правила.
+          example: "d3b07384-d113-43e4-a58f-425162438813"
+        product_name:
+          type: string
+          description: Название продукта.
+          example: "Простая накопительная карта"
+        product_id:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор продукта.
+          example: "a816171f-0e4f-4d92-948f-3669be346065"
+        product_text:
+          type: string
+          description: Текст рекомендации.
+          example: "Накапливайте средства с выгодным процентом."
+        queries:
+          type: array
+          description: Список условий правила.
+          items:
+            $ref: "#/components/schemas/RuleQueryDto"
+      required:
+        - id
+        - product_name
+        - product_id
+        - product_text
+        - queries
+
+    RuleResponseListDto:
+      type: object
+      description: Ответ со списком правил.
+      properties:
+        rules:
+          type: array
+          description: Список динамических правил.
+          items:
+            $ref: "#/components/schemas/RuleItemDto"
+      required:
+        - rules
