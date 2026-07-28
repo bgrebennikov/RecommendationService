@@ -29,8 +29,6 @@ public interface RuleMapper {
 
     RuleItemDto toItemDto(RuleEntity ruleEntity);
 
-    RuleQueryResponseDto toQueryDto(RuleEntity ruleEntity);
-
     default RuleResponseListDto toListResponseDto(List<RuleEntity> entities) {
         if (entities == null || entities.isEmpty()) {
             return new RuleResponseListDto(List.of());

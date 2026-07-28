@@ -3,7 +3,6 @@ package com.github.bgrebennikov.recommendationservice.rule;
 import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
-import com.github.bgrebennikov.recommendationservice.rule.statics.SimpleCreditRuleSet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.github.bgrebennikov.recommendationservice.rule.SimpleCreditRuleSet;
 
 import java.math.BigDecimal;
 import java.util.Optional;
