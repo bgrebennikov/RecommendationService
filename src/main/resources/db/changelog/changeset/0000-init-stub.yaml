@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0000-stub
+      author: boris
+      changes:
+        - empty: {}
+
+  - includeAll:
+      path: db/changelog/migrations/

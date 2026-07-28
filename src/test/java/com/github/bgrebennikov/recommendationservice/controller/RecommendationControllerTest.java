@@ -1,7 +1,7 @@
 package com.github.bgrebennikov.recommendationservice.controller;
 
-import com.github.bgrebennikov.recommendationservice.data.RecommendationItem;
-import com.github.bgrebennikov.recommendationservice.data.RecommendationResponse;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationResponse;
 import com.github.bgrebennikov.recommendationservice.service.RecommendationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class RecommendationControllerWebMvcTest {
     @Test
     @DisplayName("Должен вернуть рекомендацию Invest 500 для соответствующего пользователя")
     void shouldReturnInvest500Recommendation() throws Exception {
-        RecommendationItem investItem = new RecommendationItem(
+        RecommendationItemDto investItem = new RecommendationItemDto(
                 UUID.fromString("22222222-2fff-41af-baff-90ccd7402925"),
                 "Invest 500",
                 "Текст ТЗ для Invest 500"
@@ -56,7 +56,7 @@ class RecommendationControllerWebMvcTest {
     @Test
     @DisplayName("Должен вернуть рекомендацию Top Saving для соответствующего пользователя")
     void shouldReturnTopSavingRecommendation() throws Exception {
-        RecommendationItem savingItem = new RecommendationItem(
+        RecommendationItemDto savingItem = new RecommendationItemDto(
                 UUID.fromString("59efc529-2fff-41af-baff-90ccd7402925"),
                 "Top Saving",
                 "Текст ТЗ для Top Saving"
@@ -76,7 +76,7 @@ class RecommendationControllerWebMvcTest {
     @Test
     @DisplayName("Должен вернуть рекомендацию Простой кредит для соответствующего пользователя")
     void shouldReturnSimpleCreditRecommendation() throws Exception {
-        RecommendationItem creditItem = new RecommendationItem(
+        RecommendationItemDto creditItem = new RecommendationItemDto(
                 UUID.fromString("ab138afb-f3ba-4a93-b74f-0fcee86d447f"),
                 "Простой кредит",
                 "Текст ТЗ для Простого кредита"

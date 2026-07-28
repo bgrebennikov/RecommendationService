@@ -1,0 +1,115 @@
+package com.github.bgrebennikov.recommendationservice.data.persistence;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Сущность условия (запроса), входящего в состав динамического правила.
+ * <p>
+ * Определяет конкретную проверку (например, наличие продукта или сумма транзакций)
+ * и аргументы для выполнения этой проверки.
+ *
+ * @author Konstantin, Boris
+ * @version 1.0
+ */
+@Entity
+@Table(name = "rule_query")
+public class RuleQueryEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "query_type", nullable = false)
+    private DRuleQuery queryType;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "arguments", columnDefinition = "JSONB")
+    private List<String> arguments;
+
+    @Column(nullable = false)
+    private Boolean negate;
+
+    @Column(name = "sort_order", nullable = false)
+    @JsonIgnore
+    private Integer sortOrder;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rule_id", nullable = false)
+    private RuleEntity rule;
+
+
+    public RuleQueryEntity() {
+    }
+
+    /**
+     * @param queryType Тип запроса/проверки
+     * @param arguments Список аргументов для запроса
+     * @param negate    Флаг отрицания результата
+     * @param sortOrder Порядок сортировки условия
+     */
+    public RuleQueryEntity(DRuleQuery queryType, List<String> arguments, Boolean negate, Integer sortOrder) {
+        this.queryType = queryType;
+        this.arguments = arguments;
+        this.negate = negate;
+        this.sortOrder = sortOrder;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public DRuleQuery getQueryType() {
+        return queryType;
+    }
+
+    public void setQueryType(DRuleQuery queryType) {
+        this.queryType = queryType;
+    }
+
+    public List<String> getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(List<String> arguments) {
+        this.arguments = arguments;
+    }
+
+    public Boolean getNegate() {
+        return negate;
+    }
+
+    public void setNegate(Boolean negate) {
+        this.negate = negate;
+    }
+
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public RuleEntity getRule() {
+        return rule;
+    }
+
+    public void setRule(RuleEntity rule) {
+        this.rule = rule;
+    }
+}
+
