@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-public record RuleResponseDto(
+public record RuleResponseListDto(
         List<RuleItemDto> data
 ) implements Serializable {
     @Serial
