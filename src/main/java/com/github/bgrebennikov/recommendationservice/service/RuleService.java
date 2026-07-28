@@ -1,18 +1,16 @@
 package com.github.bgrebennikov.recommendationservice.service;
 
+import com.github.bgrebennikov.recommendationservice.data.RuleMapper;
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleCreateRequest;
-import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleQueryResponseDto;
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleItemDto;
-import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleResponseDto;
+import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleResponseListDto;
 import com.github.bgrebennikov.recommendationservice.data.persistence.RuleEntity;
-import com.github.bgrebennikov.recommendationservice.data.persistence.RuleQueryEntity;
 import com.github.bgrebennikov.recommendationservice.repository.RuleRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -22,7 +20,7 @@ import java.util.UUID;
  * и автоматическим кэшированием списков правил в Redis.
  *
  * @author Ekaterina, Boris
- * @version 1.1
+ * @version 1.3
  */
 @Service
 public class RuleService {
@@ -30,9 +28,11 @@ public class RuleService {
     public static final String RULES_CACHE_KEY = "s_rules";
 
     private final RuleRepository ruleRepository;
+    private final RuleMapper ruleMapper;
 
-    public RuleService(RuleRepository ruleRepository) {
+    public RuleService(RuleRepository ruleRepository, RuleMapper ruleMapper) {
         this.ruleRepository = ruleRepository;
+        this.ruleMapper = ruleMapper;
     }
 
     /**
@@ -41,39 +41,27 @@ public class RuleService {
      * Сбрасывает кэш правил, чтобы новые запросы рекомендаций подхватили созданное правило.
      *
      * @param request DTO с данными для создания правила и списком условий
-     * @return Сохраненную сущность {@link RuleEntity} с присвоенным ID и связанными условиями
+     * @return DTO сохраненного правила {@link RuleItemDto}
      */
     @Transactional
     @CacheEvict(value = RULES_CACHE_KEY, allEntries = true)
-    public RuleEntity createRule(RuleCreateRequest request) {
-        RuleEntity entity = new RuleEntity();
-        entity.setProductId(request.getProductId());
-        entity.setProductName(request.getProductName());
-        entity.setProductText(request.getProductText());
+    public RuleItemDto createRule(RuleCreateRequest request) {
+        RuleEntity entity = ruleMapper.toEntity(request);
 
-        var rulesList = request.getRule();
-        if (rulesList != null) {
-            for (int i = 0; i < rulesList.size(); i++) {
-                var dRule = rulesList.get(i);
-                RuleQueryEntity query = new RuleQueryEntity();
-                query.setQueryType(dRule.getQuery());
-                query.setArguments(dRule.getArguments());
-                query.setNegate(Boolean.TRUE.equals(dRule.getNegate()));
-                query.setSortOrder(i);
-
-                entity.addQuery(query);
-            }
+        if (entity.getQueries() != null) {
+            entity.getQueries().forEach(query -> query.setRule(entity));
         }
 
-        return ruleRepository.save(entity);
+        RuleEntity savedEntity = ruleRepository.save(entity);
+        return ruleMapper.toItemDto(savedEntity);
     }
 
     /**
      * Возвращает список всех существующих правил в системе.
      * <p>
-     * Результат кэшируется в Redis под ключом {@code rules}.
+     * Результат кэшируется в Redis под ключом {@value RULES_CACHE_KEY}.
      *
-     * @return Список сущностей {@link RuleEntity}
+     * @return DTO-контейнер со списком всех правил {@link RuleResponseListDto}
      */
     @Transactional(readOnly = true)
     @Cacheable(value = RULES_CACHE_KEY)
@@ -94,22 +82,5 @@ public class RuleService {
     @CacheEvict(value = RULES_CACHE_KEY, allEntries = true)
     public void deleteRule(UUID id) {
         ruleRepository.deleteById(id);
-    }
-
-
-    private RuleItemDto toDto(RuleEntity entity) {
-
-        List<RuleQueryResponseDto> queryDto = entity.getQueries().stream()
-                .map(q -> new RuleQueryResponseDto(
-                        q.getQueryType().name(), q.getArguments(), q.getNegate()
-                )).toList();
-
-        return new RuleItemDto(
-                entity.getId().toString(),
-                entity.getProductId().toString(),
-                entity.getProductName(),
-                entity.getProductText(),
-                queryDto
-        );
     }
 }
