@@ -12,6 +12,16 @@ import java.util.List;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
+
+/**
+ * Маппер для преобразования сущностей правил рекомендаций ({@link RuleEntity}, {@link RuleQueryEntity})
+ * в соответствующие DTO и обратно.
+ * <p>
+ * Использует MapStruct для автоматической генерации реализации в Spring-контексте.
+ *
+ * @author Boris
+ * @version 1.0
+ */
 @Mapper(
         componentModel = SPRING
 )
