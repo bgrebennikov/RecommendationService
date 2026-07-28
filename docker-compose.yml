@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  recommendation-service:
+    build: .
+    container_name: recommendation_service_app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/${DB_NAME:-recommendation_db}
+      SPRING_DATASOURCE_USERNAME: ${DB_LOGIN:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-postgres}
+
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: always
+
   postgres-db:
     image: postgres:15-alpine
     container_name: recommendation_service_db
@@ -13,6 +32,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_LOGIN:-postgres} -d ${DB_NAME:-recommendation_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     restart: always
 
   redis:
