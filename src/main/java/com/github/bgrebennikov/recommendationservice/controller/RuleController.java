@@ -1,7 +1,8 @@
 package com.github.bgrebennikov.recommendationservice.controller;
 
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleCreateRequest;
-import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleResponseDto;
+import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleItemDto;
+import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleResponseListDto;
 import com.github.bgrebennikov.recommendationservice.data.persistence.RuleEntity;
 import com.github.bgrebennikov.recommendationservice.service.RuleService;
 import org.springframework.http.HttpStatus;
@@ -35,17 +36,17 @@ public class RuleController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public RuleEntity createRule(@RequestBody RuleCreateRequest request) {
+    public RuleItemDto createRule(@RequestBody RuleCreateRequest request) {
         return ruleService.createRule(request);
     }
 
     /**
      * Возвращает полный список всех зарегистрированных правил.
      *
-     * @return Список сущностей {@link RuleEntity} со статусом 200 OK
+     * @return Список сущностей {@link RuleResponseListDto} со статусом 200 OK
      */
     @GetMapping
-    public RuleResponseDto getAllRules() {
+    public RuleResponseListDto getAllRules() {
         return ruleService.findAll();
     }
 
