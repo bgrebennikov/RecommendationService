@@ -31,10 +31,10 @@ public class RuleController {
      * Создает новое правило рекомендаций.
      *
      * @param request DTO с параметрами создаваемого правила и его условиями
-     * @return Созданная сущность {@link RuleEntity} со статусом 201 Created
+     * @return Созданная сущность {@link RuleEntity} со статусом 200 OK
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public RuleEntity createRule(@RequestBody RuleCreateRequest request) {
         return ruleService.createRule(request);
     }
