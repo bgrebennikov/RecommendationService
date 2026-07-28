@@ -9,7 +9,7 @@ import java.util.UUID;
  * @author Ekaterina, Boris
  * @version 1.0
  */
-public class RecommendationItem {
+public class RecommendationItemDto {
 
     private UUID id;
     private String name;
@@ -20,13 +20,13 @@ public class RecommendationItem {
      * @param name Наименование продукта
      * @param text Рекламное описание или текст рекомендации
      */
-    public RecommendationItem(UUID id, String name, String text) {
+    public RecommendationItemDto(UUID id, String name, String text) {
         this.id = id;
         this.name = name;
         this.text = text;
     }
 
-    public RecommendationItem() {
+    public RecommendationItemDto() {
     }
 
     public UUID getId() {
@@ -56,7 +56,7 @@ public class RecommendationItem {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        RecommendationItem that = (RecommendationItem) o;
+        RecommendationItemDto that = (RecommendationItemDto) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(text, that.text);
     }
 

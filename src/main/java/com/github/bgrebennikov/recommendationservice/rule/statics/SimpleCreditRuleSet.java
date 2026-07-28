@@ -1,6 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import org.springframework.stereotype.Component;
@@ -44,7 +44,7 @@ public class SimpleCreditRuleSet implements RecommendationRuleSet {
     }
 
     @Override
-    public Optional<RecommendationItem> evaluate(UUID userId) {
+    public Optional<RecommendationItemDto> evaluate(UUID userId) {
         boolean hasCredit = repository.hasProductType(userId, ProductType.CREDIT);
         if (hasCredit) {
             return Optional.empty();
@@ -60,7 +60,7 @@ public class SimpleCreditRuleSet implements RecommendationRuleSet {
                 debitDeposits.compareTo(debitWithdrawals) > 0;
 
         if (isWithdrawalsOverLimit && isDepositsGreater) {
-            return Optional.of(new RecommendationItem(
+            return Optional.of(new RecommendationItemDto(
                     CREDIT_ID,
                     NAME,
                     TEXT

@@ -1,6 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -21,5 +21,5 @@ public interface RecommendationRuleSet {
      * @return {@link Optional} с рекомендацией, если пользователь соответствует условиям правила;
      * иначе {@link Optional#empty()}
      */
-    Optional<RecommendationItem> evaluate(UUID userId);
+    Optional<RecommendationItemDto> evaluate(UUID userId);
 }

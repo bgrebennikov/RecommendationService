@@ -1,10 +1,10 @@
 package com.github.bgrebennikov.recommendationservice.service;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
 import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationResponse;
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
-import com.github.bgrebennikov.recommendationservice.model.RuleEntity;
-import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleEntity;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleQueryEntity;
 import com.github.bgrebennikov.recommendationservice.repository.RuleRepository;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationDynamicRuleSet;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationRuleSet;
@@ -62,7 +62,7 @@ public class RecommendationService {
      * @return Общий результат с агрегированным списком персональных рекомендаций
      */
     public RecommendationResponse getRecommendations(UUID userId) {
-        List<RecommendationItem> recommendations = new ArrayList<>();
+        List<RecommendationItemDto> recommendations = new ArrayList<>();
 
         recommendations.addAll(evaluateStaticRules(userId));
         recommendations.addAll(evaluateDynamicRules(userId));
@@ -70,14 +70,14 @@ public class RecommendationService {
         return new RecommendationResponse(userId.toString(), recommendations);
     }
 
-    private List<RecommendationItem> evaluateStaticRules(UUID userId) {
+    private List<RecommendationItemDto> evaluateStaticRules(UUID userId) {
         return staticRuleSets.stream()
                 .map(rule -> rule.evaluate(userId))
                 .flatMap(Optional::stream)
                 .toList();
     }
 
-    private List<RecommendationItem> evaluateDynamicRules(UUID userId) {
+    private List<RecommendationItemDto> evaluateDynamicRules(UUID userId) {
         return ruleRepository.findAll().stream()
                 .filter(rule -> isRuleMatches(userId, rule))
                 .map(this::toRecommendationItem)
@@ -85,14 +85,14 @@ public class RecommendationService {
     }
 
     private boolean isRuleMatches(UUID userId, RuleEntity rule) {
-        List<RuleQuery> queries = rule.getQueries();
+        List<RuleQueryEntity> queries = rule.getQueries();
         if (queries == null || queries.isEmpty()) {
             return false;
         }
         return queries.stream().allMatch(query -> evaluateQuery(userId, query));
     }
 
-    private boolean evaluateQuery(UUID userId, RuleQuery query) {
+    private boolean evaluateQuery(UUID userId, RuleQueryEntity query) {
         DRuleQuery queryType = query.getQueryType();
         if (queryType == null) {
             LOGGER.log(Level.WARNING, "Query type is null for query: {0}", query);
@@ -108,8 +108,8 @@ public class RecommendationService {
         return strategy.evaluate(userId, query);
     }
 
-    private RecommendationItem toRecommendationItem(RuleEntity rule) {
-        return new RecommendationItem(
+    private RecommendationItemDto toRecommendationItem(RuleEntity rule) {
+        return new RecommendationItemDto(
                 rule.getId(),
                 rule.getProductName(),
                 rule.getProductText()

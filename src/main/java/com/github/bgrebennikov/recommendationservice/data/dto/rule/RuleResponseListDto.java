@@ -4,11 +4,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
-public record RuleQueryDto(
-        String queryType,
-        List<String> arguments,
-        Boolean negate,
-        Integer sortOrder
+public record RuleResponseListDto(
+        List<RuleItemDto> data
 ) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

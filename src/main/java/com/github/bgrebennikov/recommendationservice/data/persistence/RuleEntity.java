@@ -1,4 +1,4 @@
-package com.github.bgrebennikov.recommendationservice.model;
+package com.github.bgrebennikov.recommendationservice.data.persistence;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -35,12 +35,12 @@ public class RuleEntity {
     @OneToMany(mappedBy = "rule", cascade = CascadeType.ALL, orphanRemoval = true,
             fetch = FetchType.LAZY)
     @OrderBy("sortOrder ASC")
-    private List<RuleQuery> queries;
+    private List<RuleQueryEntity> queries;
 
     public RuleEntity() {
     }
 
-    public RuleEntity(String productName, UUID productId, String productText, List<RuleQuery> queries) {
+    public RuleEntity(String productName, UUID productId, String productText, List<RuleQueryEntity> queries) {
         this.productName = productName;
         this.productId = productId;
         this.productText = productText;
@@ -79,11 +79,11 @@ public class RuleEntity {
         this.productText = productText;
     }
 
-    public List<RuleQuery> getQueries() {
+    public List<RuleQueryEntity> getQueries() {
         return queries;
     }
 
-    public void setQueries(List<RuleQuery> queries) {
+    public void setQueries(List<RuleQueryEntity> queries) {
         this.queries = queries != null ? queries : new ArrayList<>();
     }
 
@@ -96,7 +96,7 @@ public class RuleEntity {
      *
      * @param query Добавляемое условие (запрос)
      */
-    public void addQuery(RuleQuery query) {
+    public void addQuery(RuleQueryEntity query) {
         if (this.queries == null) {
             this.queries = new ArrayList<>();
         }
@@ -112,7 +112,7 @@ public class RuleEntity {
      *
      * @param query Удаляемое условие (запрос)
      */
-    public void removeQuery(RuleQuery query) {
+    public void removeQuery(RuleQueryEntity query) {
         if (this.queries != null) {
             this.queries.remove(query);
             query.setRule(null);

@@ -2,7 +2,7 @@ package com.github.bgrebennikov.recommendationservice.rule.dynamic;
 
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
-import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleQueryEntity;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationDynamicRuleSet;
 import org.springframework.stereotype.Component;
@@ -39,7 +39,7 @@ public class ActiveUserOffRuleSet implements RecommendationDynamicRuleSet {
     }
 
     @Override
-    public boolean evaluate(UUID userId, RuleQuery query) {
+    public boolean evaluate(UUID userId, RuleQueryEntity query) {
         try {
             ProductType productType = ProductType.valueOf(query.getArguments().get(0));
             long count = repository.countTransactionsByType(userId, productType);

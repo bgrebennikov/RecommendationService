@@ -2,7 +2,7 @@ package com.github.bgrebennikov.recommendationservice.rule.dynamic;
 
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
-import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleQueryEntity;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationDynamicRuleSet;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * Обрабатывает запросы типа {@link DRuleQuery#USER_OF}.
  * Ожидает в качестве первого аргумента ({@code query.getArguments().get(0)}) строковое представление
  * типа продукта {@link ProductType}.
- * Учитывает инверсию условия через флаг {@link RuleQuery#getNegate()}.
+ * Учитывает инверсию условия через флаг {@link RuleQueryEntity#getNegate()}.
  *
  * @author Boris
  * @version 1.0
@@ -38,7 +38,7 @@ public class UserOfRuleSet implements RecommendationDynamicRuleSet {
     }
 
     @Override
-    public boolean evaluate(UUID userId, RuleQuery query) {
+    public boolean evaluate(UUID userId, RuleQueryEntity query) {
         logger.log(Level.INFO, "Query: " + query);
         logger.log(Level.INFO, "User: " + userId);
         logger.log(Level.INFO, "Arguments: " + query.getArguments());

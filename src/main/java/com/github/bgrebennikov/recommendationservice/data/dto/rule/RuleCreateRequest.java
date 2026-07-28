@@ -23,7 +23,7 @@ public class RuleCreateRequest {
     private String productText;
 
     @JsonProperty("rule")
-    private List<DRule> rule;
+    private List<RuleQueryRequest> rule;
 
     /**
      * Конструктор с полным набором параметров.
@@ -33,7 +33,7 @@ public class RuleCreateRequest {
      * @param productText Описание или рекламный текст рекомендации
      * @param rule        Список условий (динамических правил), определяющих выдачу продукта
      */
-    public RuleCreateRequest(String productName, UUID productId, String productText, List<DRule> rule) {
+    public RuleCreateRequest(String productName, UUID productId, String productText, List<RuleQueryRequest> rule) {
         this.productName = productName;
         this.productId = productId;
         this.productText = productText;
@@ -75,9 +75,9 @@ public class RuleCreateRequest {
     /**
      * Возвращает список динамических условий правила.
      *
-     * @return Список условий {@link DRule}
+     * @return Список условий {@link RuleQueryRequest}
      */
-    public List<DRule> getRule() {
+    public List<RuleQueryRequest> getRule() {
         return rule;
     }
 }

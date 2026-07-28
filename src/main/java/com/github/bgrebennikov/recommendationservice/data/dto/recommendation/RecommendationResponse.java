@@ -15,13 +15,13 @@ public class RecommendationResponse {
     @JsonProperty("user_id")
     private String userId;
 
-    private List<RecommendationItem> recommendations;
+    private List<RecommendationItemDto> recommendations;
 
     /**
      * @param userId          Уникальный идентификатор пользователя
      * @param recommendations Список целевых рекомендаций
      */
-    public RecommendationResponse(String userId, List<RecommendationItem> recommendations) {
+    public RecommendationResponse(String userId, List<RecommendationItemDto> recommendations) {
         this.userId = userId;
         this.recommendations = recommendations;
     }
@@ -34,11 +34,11 @@ public class RecommendationResponse {
         this.userId = userId;
     }
 
-    public List<RecommendationItem> getRecommendations() {
+    public List<RecommendationItemDto> getRecommendations() {
         return recommendations;
     }
 
-    public void setRecommendations(List<RecommendationItem> recommendations) {
+    public void setRecommendations(List<RecommendationItemDto> recommendations) {
         this.recommendations = recommendations;
     }
 }

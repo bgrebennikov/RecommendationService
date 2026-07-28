@@ -10,7 +10,7 @@ import java.util.List;
  * @author Boris
  * @version 1.0
  */
-public class DRule {
+public class RuleQueryRequest {
 
     @JsonProperty("query")
     private DRuleQuery query;
@@ -26,13 +26,13 @@ public class DRule {
      * @param arguments Параметры проверки (например: тип продукта, минимальная сумма, валюта)
      * @param negate    Флаг инверсии (true — правило сработает, если проверка НЕ выполнена)
      */
-    public DRule(DRuleQuery query, List<String> arguments, Boolean negate) {
+    public RuleQueryRequest(DRuleQuery query, List<String> arguments, Boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
     }
 
-    DRule() {
+    RuleQueryRequest() {
     }
 
     /**

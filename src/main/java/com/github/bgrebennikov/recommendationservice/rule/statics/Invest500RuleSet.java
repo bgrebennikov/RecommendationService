@@ -1,6 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.rule.statics;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationRuleSet;
@@ -41,7 +41,7 @@ public class Invest500RuleSet implements RecommendationRuleSet {
     }
 
     @Override
-    public Optional<RecommendationItem> evaluate(UUID userId) {
+    public Optional<RecommendationItemDto> evaluate(UUID userId) {
         boolean hasDebit = repository.hasProductType(userId, ProductType.DEBIT);
         if (!hasDebit) {
             return Optional.empty();
@@ -57,7 +57,7 @@ public class Invest500RuleSet implements RecommendationRuleSet {
         boolean isSavingEnough = savingDeposits != null && savingDeposits.compareTo(BigDecimal.valueOf(1000)) > 0;
 
         if (isSavingEnough) {
-            return Optional.of(new RecommendationItem(
+            return Optional.of(new RecommendationItemDto(
                     INVEST_500_ID,
                     NAME,
                     TEXT

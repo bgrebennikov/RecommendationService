@@ -1,6 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.rule.statics;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationRuleSet;
@@ -55,7 +55,7 @@ public class TopSavingRuleSet implements RecommendationRuleSet {
     }
 
     @Override
-    public Optional<RecommendationItem> evaluate(UUID userId) {
+    public Optional<RecommendationItemDto> evaluate(UUID userId) {
         boolean hasDebit = repository.hasProductType(userId, ProductType.DEBIT);
         if (!hasDebit) {
             return Optional.empty();
@@ -74,7 +74,7 @@ public class TopSavingRuleSet implements RecommendationRuleSet {
                 debitDeposits.compareTo(debitWithdrawals) > 0;
 
         if (isDepositsGreaterLimit && isDepositsGreaterWithdrawals) {
-            return Optional.of(new RecommendationItem(
+            return Optional.of(new RecommendationItemDto(
                     TOP_SAVING_ID,
                     NAME,
                     TEXT
