@@ -1,6 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import com.github.bgrebennikov.recommendationservice.rule.statics.Invest500RuleSet;
@@ -40,7 +40,7 @@ class Invest500RuleSetTest {
         Mockito.when(repository.sumOfDepositsByType(userId, ProductType.SAVING))
                 .thenReturn(new BigDecimal("5000.00"));
 
-        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
+        Optional<RecommendationItemDto> result = ruleSet.evaluate(userId);
 
         assertTrue(result.isPresent());
         assertEquals("Invest 500", result.get().getName());
@@ -51,7 +51,7 @@ class Invest500RuleSetTest {
     void shouldReturnEmptyWhenUserHasNoDebitCard() {
         Mockito.when(repository.hasProductType(userId, ProductType.DEBIT)).thenReturn(false);
 
-        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
+        Optional<RecommendationItemDto> result = ruleSet.evaluate(userId);
         assertTrue(result.isEmpty());
     }
 

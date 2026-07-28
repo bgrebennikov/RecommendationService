@@ -1,4 +1,4 @@
-package com.github.bgrebennikov.recommendationservice.model;
+package com.github.bgrebennikov.recommendationservice.data.persistence;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,7 +21,7 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "rule_query")
-public class RuleQuery {
+public class RuleQueryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -48,7 +48,7 @@ public class RuleQuery {
     private RuleEntity rule;
 
 
-    public RuleQuery() {
+    public RuleQueryEntity() {
     }
 
     /**
@@ -57,7 +57,7 @@ public class RuleQuery {
      * @param negate    Флаг отрицания результата
      * @param sortOrder Порядок сортировки условия
      */
-    public RuleQuery(DRuleQuery queryType, List<String> arguments, Boolean negate, Integer sortOrder) {
+    public RuleQueryEntity(DRuleQuery queryType, List<String> arguments, Boolean negate, Integer sortOrder) {
         this.queryType = queryType;
         this.arguments = arguments;
         this.negate = negate;

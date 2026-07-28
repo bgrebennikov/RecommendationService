@@ -1,7 +1,7 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
-import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleQueryEntity;
 
 import java.util.UUID;
 
@@ -28,5 +28,5 @@ public interface RecommendationDynamicRuleSet {
      * @param query  Сущность условия из БД, содержащая аргументы и логику проверки
      * @return {@code true}, если условие выполнено; иначе {@code false}
      */
-    boolean evaluate(UUID userId, RuleQuery query);
+    boolean evaluate(UUID userId, RuleQueryEntity query);
 }

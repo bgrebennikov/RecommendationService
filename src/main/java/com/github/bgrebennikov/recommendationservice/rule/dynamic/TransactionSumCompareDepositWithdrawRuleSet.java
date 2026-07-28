@@ -4,7 +4,7 @@ package com.github.bgrebennikov.recommendationservice.rule.dynamic;
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
 import com.github.bgrebennikov.recommendationservice.data.types.ComparisonOperator;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
-import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleQueryEntity;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationDynamicRuleSet;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class TransactionSumCompareDepositWithdrawRuleSet implements Recommendati
     }
 
     @Override
-    public boolean evaluate(UUID userId, RuleQuery query) {
+    public boolean evaluate(UUID userId, RuleQueryEntity query) {
         List<String> args = query.getArguments();
         if (args == null || args.size() < 2) {
             return false;

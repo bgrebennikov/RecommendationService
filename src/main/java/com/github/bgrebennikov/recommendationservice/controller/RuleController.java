@@ -2,7 +2,7 @@ package com.github.bgrebennikov.recommendationservice.controller;
 
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleCreateRequest;
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleResponseDto;
-import com.github.bgrebennikov.recommendationservice.model.RuleEntity;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleEntity;
 import com.github.bgrebennikov.recommendationservice.service.RuleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

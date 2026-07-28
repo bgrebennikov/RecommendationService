@@ -4,7 +4,7 @@ import com.github.bgrebennikov.recommendationservice.data.dto.rule.DRuleQuery;
 import com.github.bgrebennikov.recommendationservice.data.types.ComparisonOperator;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.data.types.TransactionType;
-import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleQueryEntity;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationDynamicRuleSet;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import java.util.UUID;
  * Вычисляет агрегированную сумму пополнений или списаний по конкретному продукту
  * и сравнивает ее с константой с помощью оператора сравнения.
  * <p>
- * <b>Ожидаемые аргументы в {@link RuleQuery}:</b>
+ * <b>Ожидаемые аргументы в {@link RuleQueryEntity}:</b>
  * <ul>
  *     <li>{@code arguments[0]} — наименование {@link ProductType} (например, {@code "DEBIT"});</li>
  *     <li>{@code arguments[1]} — тип транзакции ({@code "DEPOSIT"} или {@code "WITHDRAW"});</li>
@@ -45,7 +45,7 @@ public class TransactionSumCompareRuleSet implements RecommendationDynamicRuleSe
     }
 
     @Override
-    public boolean evaluate(UUID userId, RuleQuery query) {
+    public boolean evaluate(UUID userId, RuleQueryEntity query) {
         List<String> args = query.getArguments();
         if (args == null || args.size() < 4) {
             return false;

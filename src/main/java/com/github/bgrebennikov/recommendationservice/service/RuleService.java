@@ -1,11 +1,11 @@
 package com.github.bgrebennikov.recommendationservice.service;
 
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleCreateRequest;
-import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleQueryDto;
+import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleQueryResponseDto;
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleItemDto;
 import com.github.bgrebennikov.recommendationservice.data.dto.rule.RuleResponseDto;
-import com.github.bgrebennikov.recommendationservice.model.RuleEntity;
-import com.github.bgrebennikov.recommendationservice.model.RuleQuery;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleEntity;
+import com.github.bgrebennikov.recommendationservice.data.persistence.RuleQueryEntity;
 import com.github.bgrebennikov.recommendationservice.repository.RuleRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -55,7 +55,7 @@ public class RuleService {
         if (rulesList != null) {
             for (int i = 0; i < rulesList.size(); i++) {
                 var dRule = rulesList.get(i);
-                RuleQuery query = new RuleQuery();
+                RuleQueryEntity query = new RuleQueryEntity();
                 query.setQueryType(dRule.getQuery());
                 query.setArguments(dRule.getArguments());
                 query.setNegate(Boolean.TRUE.equals(dRule.getNegate()));
@@ -102,9 +102,9 @@ public class RuleService {
 
     private RuleItemDto toDto(RuleEntity entity) {
 
-        List<RuleQueryDto> queryDto = entity.getQueries().stream()
-                .map(q -> new RuleQueryDto(
-                        q.getQueryType().name(), q.getArguments(), q.getNegate(), q.getSortOrder()
+        List<RuleQueryResponseDto> queryDto = entity.getQueries().stream()
+                .map(q -> new RuleQueryResponseDto(
+                        q.getQueryType().name(), q.getArguments(), q.getNegate()
                 )).toList();
 
         return new RuleItemDto(

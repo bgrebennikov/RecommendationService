@@ -9,7 +9,7 @@ public record RuleItemDto(
         String productId,
         String productName,
         String productText,
-        List<RuleQueryDto> queries
+        List<RuleQueryResponseDto> queries
 ) implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

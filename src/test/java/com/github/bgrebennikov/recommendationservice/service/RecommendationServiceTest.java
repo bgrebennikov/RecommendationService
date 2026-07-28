@@ -1,6 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.service;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
 import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationResponse;
 import com.github.bgrebennikov.recommendationservice.repository.RuleRepository;
 import com.github.bgrebennikov.recommendationservice.rule.RecommendationRuleSet;
@@ -48,10 +48,10 @@ class RecommendationServiceTest {
     @Test
     @DisplayName("Должен вернуть все подходящие рекомментации")
     void shouldReturnAllMatchingRecommendations() {
-        RecommendationItem investRec = new RecommendationItem(
+        RecommendationItemDto investRec = new RecommendationItemDto(
                 UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a"), "Invest500", "text"
         );
-        RecommendationItem creditRec = new RecommendationItem(
+        RecommendationItemDto creditRec = new RecommendationItemDto(
                 UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5b"), "Простой кредит", "text"
         );
 

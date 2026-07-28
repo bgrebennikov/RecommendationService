@@ -1,6 +1,6 @@
 package com.github.bgrebennikov.recommendationservice.rule;
 
-import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItem;
+import com.github.bgrebennikov.recommendationservice.data.dto.recommendation.RecommendationItemDto;
 import com.github.bgrebennikov.recommendationservice.data.types.ProductType;
 import com.github.bgrebennikov.recommendationservice.repository.RecommendationRepository;
 import com.github.bgrebennikov.recommendationservice.rule.statics.SimpleCreditRuleSet;
@@ -40,7 +40,7 @@ class SimpleCreditRuleSetTest {
         Mockito.when(repository.sumOfWithdrawalsByType(userId, ProductType.DEBIT)).thenReturn(new BigDecimal("120000.00"));
         Mockito.when(repository.sumOfDepositsByType(userId, ProductType.DEBIT)).thenReturn(new BigDecimal("150000.00"));
 
-        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
+        Optional<RecommendationItemDto> result = ruleSet.evaluate(userId);
 
         assertTrue(result.isPresent());
         assertEquals("Простой кредит", result.get().getName());
@@ -51,7 +51,7 @@ class SimpleCreditRuleSetTest {
     void shouldReturnEmptyWhenUserAlreadyHasCredit() {
         Mockito.when(repository.hasProductType(userId, ProductType.CREDIT)).thenReturn(true);
 
-        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
+        Optional<RecommendationItemDto> result = ruleSet.evaluate(userId);
 
         Assertions.assertTrue(result.isEmpty());
     }
@@ -64,7 +64,7 @@ class SimpleCreditRuleSetTest {
         Mockito.when(repository.sumOfWithdrawalsByType(userId, ProductType.DEBIT)).thenReturn(new BigDecimal("100000.00"));
         Mockito.when(repository.sumOfDepositsByType(userId, ProductType.DEBIT)).thenReturn(new BigDecimal("110000.00"));
 
-        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
+        Optional<RecommendationItemDto> result = ruleSet.evaluate(userId);
 
         Assertions.assertTrue(result.isEmpty());
     }
@@ -76,7 +76,7 @@ class SimpleCreditRuleSetTest {
         Mockito.when(repository.sumOfWithdrawalsByType(userId, ProductType.DEBIT)).thenReturn(new BigDecimal("150000.00"));
         Mockito.when(repository.sumOfDepositsByType(userId, ProductType.DEBIT)).thenReturn(new BigDecimal("130000.00"));
 
-        Optional<RecommendationItem> result = ruleSet.evaluate(userId);
+        Optional<RecommendationItemDto> result = ruleSet.evaluate(userId);
 
         assertTrue(result.isEmpty());
     }
